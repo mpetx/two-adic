@@ -41,6 +41,17 @@ namespace two_adic {
 
   template <std::size_t size>
   nat<size> nat<size>::operator*(nat const & n) const {
+    nat result;
+    nat lhs { *this };
+    nat rhs { n };
+    while (!rhs.is_zero()) {
+      if ((rhs.buffer[0] & 1) != 0) {
+	result = result + lhs;
+      }
+      rhs = rhs >> 1;
+      lhs = lhs << 1;
+    }
+    return result;
   }
 
   template <std::size_t size>
