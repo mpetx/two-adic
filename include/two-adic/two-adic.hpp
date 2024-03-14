@@ -45,6 +45,13 @@ namespace two_adic {
 
     static double distance(two_adic const &, two_adic const &);
 
+    two_adic & operator+=(two_adic const &);
+    two_adic & operator-=(two_adic const &);
+    two_adic & operator*=(two_adic const &);
+    two_adic & operator/=(two_adic const &);
+    two_adic & operator<<=(std::size_t);
+    two_adic & operator>>=(std::size_t);
+    
     template <std::size_t precision2>
     friend std::ostream & operator<<(std::ostream &, two_adic<precision2> const &);
   };

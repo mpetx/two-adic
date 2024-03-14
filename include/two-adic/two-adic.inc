@@ -125,6 +125,43 @@ namespace two_adic {
   }
 
   template <std::size_t precision>
+  two_adic<precision> & two_adic<precision>::operator+=(two_adic const & x) {
+    *this = *this + x;
+    return *this;
+  }
+
+  template <std::size_t precision>
+  two_adic<precision> & two_adic<precision>::operator-=(two_adic const & x) {
+    *this = *this - x;
+    return *this;
+  }
+
+  template <std::size_t precision>
+  two_adic<precision> & two_adic<precision>::operator*=(two_adic const & x) {
+    *this = *this * x;
+    return *this;
+  }
+
+  template <std::size_t precision>
+  two_adic<precision> & two_adic<precision>::operator/=(two_adic const & x) {
+    *this = *this / x;
+    return *this;
+  }
+
+  template <std::size_t precision>
+  two_adic<precision> & two_adic<precision>::operator<<=(std::size_t offset) {
+    *this = *this << offset;
+    return *this;
+  }
+
+  template <std::size_t precision>
+  two_adic<precision> & two_adic<precision>::operator>>=(std::size_t offset) {
+    *this = *this >> offset;
+    return *this;
+  }
+  
+
+  template <std::size_t precision>
   std::ostream & operator<<(std::ostream & out, two_adic<precision> const & x) {
     out << x.fraction << "P" << x.exponent;
     return out;
