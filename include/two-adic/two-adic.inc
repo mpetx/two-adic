@@ -132,7 +132,7 @@ namespace two_adic {
   two_adic<precision> two_adic<precision>::operator>>(std::size_t offset) const {
     if (is_nan())
       return *this;
-    else if (exponent < min_exponent + offset)
+    else if (0 - min_exponent + exponent < offset)
       return nan();
     two_adic result { *this };
     result.exponent -= offset;
