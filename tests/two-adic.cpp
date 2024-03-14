@@ -97,10 +97,30 @@ void test_two_adic_inverse() {
     std::cout << " OK\n";
 }
 
+void test_two_adic_nan() {
+  std::cout << "test_two_adic_nan" << std::endl;
+  bool ok = true;
+  two_adic::two_adic<64> nan { two_adic::two_adic<64>::nan() };
+  two_adic::two_adic<64> one { 1 };
+  two_adic::two_adic<64> zero { 0 };
+  ok = assert_equal(nan.is_nan(), true, [](std::ostream & out) {
+    out << "nan.is_nan()";
+  }) && ok;
+  ok = assert_equal(one.is_nan(), false, [](std::ostream & out) {
+    out << "1.is_nan()";
+  }) && ok;
+  ok = assert_equal(zero.inverse().is_nan(), true, [](std::ostream & out) {
+    out << "1/0.is_nan()";
+  }) && ok;
+  if (ok)
+    std::cout << " OK\n";
+}
+
 int main() {
   test_two_adic_addition();
   test_two_adic_negation();
   test_two_adic_multiplication();
   test_two_adic_inverse();
+  test_two_adic_nan();
   std::cout << std::flush;
 }

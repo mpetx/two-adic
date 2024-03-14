@@ -80,6 +80,20 @@ two_adic & operator<<=(std::size_t offset);
 two_adic & operator>>=(std::size_t offset);
 ```
 
+### `is_nan`
+```cpp
+bool is_nan() const;
+```
+
+値がnanかどうかを調べる。
+
+### `nan`
+```cpp
+static two_adic nan();
+```
+
+nanを返す。
+
 ### `operator<<`
 ```cpp
 std::ostream & operator<<(std::ostream & out, two_adic const & x);

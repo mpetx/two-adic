@@ -33,17 +33,26 @@ namespace two_adic {
 
   template <std::size_t precision>
   void two_adic<precision>::normalize() {
-    if (fraction.is_zero()) {
+    if (is_nan())
+      return;
+    else if (fraction.is_zero()) {
       exponent = 0;
     } else {
-      std::size_t val = fraction.valuation();;
-      fraction = fraction >> val;
-      exponent += val;
+      std::size_t val = fraction.valuation();
+      if (0 + exponent + val <= max_exponent) {
+	fraction = fraction >> val;
+	exponent += val;
+      } else {
+	fraction = 0u;
+	exponent = 0;
+      }
     }
   }
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::operator+(two_adic const & x) const {
+    if (is_nan() || x.is_nan())
+      return nan();
     two_adic result;
     if (exponent <= x.exponent) {
       result.fraction = fraction + (x.fraction << (x.exponent - exponent));
@@ -58,6 +67,8 @@ namespace two_adic {
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::operator-() const {
+    if (is_nan())
+      return *this;
     two_adic result;
     result.fraction = (~fraction) + 1u;
     result.exponent = exponent;
@@ -72,15 +83,24 @@ namespace two_adic {
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::operator*(two_adic const & x) const {
+    if (is_nan() || x.is_nan())
+      return nan();
+    int exponent_sum = 0 + exponent + x.exponent;
+    if (exponent_sum < min_exponent)
+      return nan();
+    else if (max_exponent < exponent_sum)
+      return two_adic { };
     two_adic result;
     result.fraction = fraction * x.fraction;
-    result.exponent = exponent + x.exponent;
+    result.exponent = static_cast<exponent_type>(exponent_sum);
     result.normalize();
     return result;
   }
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::inverse() const {
+    if (is_nan() || fraction.is_zero())
+      return nan();
     two_adic fract { *this };
     fract.exponent = 0;
     two_adic result { fract };
@@ -99,6 +119,10 @@ namespace two_adic {
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::operator<<(std::size_t offset) const {
+    if (is_nan())
+      return *this;
+    else if (offset > 0 + max_exponent - exponent)
+      return two_adic { };
     two_adic result { *this };
     result.exponent += offset;
     return result;
@@ -106,6 +130,10 @@ namespace two_adic {
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::operator>>(std::size_t offset) const {
+    if (is_nan())
+      return *this;
+    else if (exponent < min_exponent + offset)
+      return nan();
     two_adic result { *this };
     result.exponent -= offset;
     return result;
@@ -113,7 +141,9 @@ namespace two_adic {
 
   template <std::size_t precision>
   double two_adic<precision>::norm() const {
-    if (fraction.is_zero())
+    if (is_nan())
+      return std::nan("");
+    else if (fraction.is_zero())
       return 0;
     else
       return std::pow(0.5, exponent);
@@ -161,8 +191,23 @@ namespace two_adic {
   }
 
   template <std::size_t precision>
+  bool two_adic<precision>::is_nan() const {
+    return exponent == nan_exponent;
+  }
+
+  template <std::size_t precision>
+  two_adic<precision> two_adic<precision>::nan() {
+    two_adic result;
+    result.exponent = nan_exponent;
+    return result;
+  }
+  
+  template <std::size_t precision>
   std::ostream & operator<<(std::ostream & out, two_adic<precision> const & x) {
-    out << x.fraction << "P" << x.exponent;
+    if (x.is_nan())
+      out << "nan";
+    else
+      out << x.fraction << "P" << x.exponent;
     return out;
   }
 }

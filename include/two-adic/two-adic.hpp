@@ -2,6 +2,7 @@
 #define TWO_ADIC_TWO_ADIC_HPP_2024_03_13_DED3B56D_431A_44AE_9FB6_0AB317A77A2D
 
 #include <iostream>
+#include <limits>
 
 #include <two-adic/nat.hpp>
 
@@ -13,7 +14,10 @@ namespace two_adic {
     static std::size_t constexpr nat_size = (precision / 8) + (precision % 8 != 0);
     using fraction_type = nat<nat_size>;
     using exponent_type = int16_t;
-
+    static exponent_type constexpr nan_exponent = std::numeric_limits<exponent_type>::min();
+    static exponent_type constexpr min_exponent = std::numeric_limits<exponent_type>::min() + 1;
+    static exponent_type constexpr max_exponent = std::numeric_limits<exponent_type>::max();
+    
     fraction_type fraction;
     exponent_type exponent;
 
@@ -51,6 +55,9 @@ namespace two_adic {
     two_adic & operator/=(two_adic const &);
     two_adic & operator<<=(std::size_t);
     two_adic & operator>>=(std::size_t);
+
+    bool is_nan() const;
+    static two_adic nan();
     
     template <std::size_t precision2>
     friend std::ostream & operator<<(std::ostream &, two_adic<precision2> const &);
