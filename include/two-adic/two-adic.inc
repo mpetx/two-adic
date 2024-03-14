@@ -85,7 +85,7 @@ namespace two_adic {
     fract.exponent = 0;
     two_adic result { fract };
     two_adic two { 2u };
-    std::size_t iter = static_cast<std::size_t>(std::log2(std::log2(precision))) + 2;
+    std::size_t iter = static_cast<std::size_t>(std::log2(precision)) + 2;
     for (std::size_t i = 0; i < iter; ++i)
       result = result * (two - fract * result);
     result.exponent = -exponent;
@@ -159,7 +159,6 @@ namespace two_adic {
     *this = *this >> offset;
     return *this;
   }
-  
 
   template <std::size_t precision>
   std::ostream & operator<<(std::ostream & out, two_adic<precision> const & x) {
