@@ -156,6 +156,15 @@ namespace two_adic {
     return out;
   }
 
+  template <std::size_t size>
+  nat<size> nat<size>::operator~() const {
+    nat result { *this };
+    for (std::size_t i = 0; i < size; ++i) {
+      result.buffer[i] = ~(result.buffer[i]);
+    }
+    return result;
+  }
+  
 }
 
 #endif

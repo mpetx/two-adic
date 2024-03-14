@@ -33,6 +33,7 @@ namespace two_adic {
     nat operator*(nat const &) const;
     nat operator<<(std::size_t) const;
     nat operator>>(std::size_t) const;
+    nat operator~() const;
     bool is_zero() const;
     std::size_t valuation() const;
 
