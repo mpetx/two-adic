@@ -53,6 +53,10 @@ namespace two_adic {
   two_adic<precision> two_adic<precision>::operator+(two_adic const & x) const {
     if (is_nan() || x.is_nan())
       return nan();
+    else if (fraction.is_zero())
+      return x;
+    else if (x.fraction.is_zero())
+      return *this;
     two_adic result;
     if (exponent <= x.exponent) {
       result.fraction = fraction + (x.fraction << (x.exponent - exponent));
@@ -119,7 +123,7 @@ namespace two_adic {
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::operator<<(std::size_t offset) const {
-    if (is_nan())
+    if (is_nan() || fraction.is_zero())
       return *this;
     else if (offset > 0 + max_exponent - exponent)
       return two_adic { };
@@ -130,7 +134,7 @@ namespace two_adic {
 
   template <std::size_t precision>
   two_adic<precision> two_adic<precision>::operator>>(std::size_t offset) const {
-    if (is_nan())
+    if (is_nan() || fraction.is_zero())
       return *this;
     else if (0 - min_exponent + exponent < offset)
       return nan();
